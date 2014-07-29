@@ -1,0 +1,19 @@
+{
+  "name": "essayist",
+  "version": "0.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/bliker/essayist.git"
+  },
+  "author": "Samuel Vasko",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bliker/essayist/issues"
+  },
+  "homepage": "https://github.com/bliker/essayist"
+}
