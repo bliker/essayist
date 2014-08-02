@@ -9,13 +9,11 @@ var pkg = require('./package.json');
 var target = './build/';
 
 gulp.task('default', ['build-tests'], function (argument) {
-    gulp.watch(['src/*.js', 'test/*.test.js'], ['build-tests']);
+    gulp.watch(['src/*.js', 'src/*/*.js', 'test/*.test.js', 'test/*/.test.js'], ['build-tests']);
 })
 
 gulp.task('build-tests', function () {
-    var t = browserify({debug: true})
-        .require('./test/undo-manager.test.js', {entry: true});
-
+    var t = browserify(glob('./test/*.test.js'), {debug: true})
     t.bundle()
         .on('error', gutil.log)
         .pipe(source('tests.js'))

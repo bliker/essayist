@@ -1,5 +1,5 @@
 {
   "src_files": ["build/*.js", "!build/*.min.js"],
-  "serve_files": ["build/tests.js"],
+  "serve_files": ["build/tests.js", "test/helpers.js"],
   "framework": "jasmine2"
 }

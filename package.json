@@ -16,7 +16,9 @@
     "url": "https://github.com/bliker/essayist/issues"
   },
   "homepage": "https://github.com/bliker/essayist",
-  "dependencies": {},
+  "dependencies": {
+    "lodash.intersection": "^2.4.1"
+  },
   "devDependencies": {
     "browserify": "^5.9.1",
     "glob": "^4.0.5",
