@@ -6,13 +6,13 @@ describe('Format command', function () {
             createHost();
         });
 
-        xit('should correctly format simple selection', function () {
+        it('should correctly format simple selection', function () {
             givenContent('<p>x|1|x</p>');
             format(selection(), 'b');
             expectContent().toBe('<p>x<b>1</b>x</p>');
         });
 
-        xit('should correctly format selection spaning whole text node', function () {
+        it('should correctly format selection spaning whole text node', function () {
             givenContent('<p>|1|</p>');
             format(selection(), 'b');
             expectContent().toBe('<p><b>1</b></p>');

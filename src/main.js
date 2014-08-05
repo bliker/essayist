@@ -5,6 +5,9 @@ var createEvents = require('./events');
 var Essayist = function (element) {
     var self = this;
     this.el = element;
+    this.cmd = {
+        format: require('./commands/format')
+    }
 
     createEvents(self);
 }

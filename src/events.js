@@ -15,7 +15,7 @@ module.exports = function (essayist) {
 
     // Bind all events to the element
     for(event in elementEvents) {
-        essayist.addEventListener(event, elementEvents[event]);
+        essayist.on(event, elementEvents[event]);
     }
 
     /**
