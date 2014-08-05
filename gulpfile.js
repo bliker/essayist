@@ -20,6 +20,14 @@ gulp.task('build-tests', function () {
         .pipe(gulp.dest(target));
 });
 
+gulp.task('build', function () {
+    var t = browserify('./src/main.js', {debug: true, standalone: 'Essayist'})
+    t.bundle()
+        .on('error', gutil.log)
+        .pipe(source('essayist.js'))
+        .pipe(gulp.dest(target));
+});
+
 gulp.task('clean', function () {
     gulp.src(target, {read: false}).pipe(clean());
 });
