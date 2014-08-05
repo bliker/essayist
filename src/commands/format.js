@@ -1,28 +1,47 @@
-var selector = require('../selector');
+var PositionNodes = require('../position-nodes');
 var element = require('../element');
 
 module.exports = function (selection, nodename) {
-    var sel = selector(selection);
-    if (sel.isCollapsed) { throw "WHAT WHAT WHAT"; };
-    if (sel.isSingleNode()) {
-        singleNodeFromat(sel, nodename);
-    };
-}
+    var nodes = new PositionNodes(selection);
+    nodes.splitTextOnSelection();
+    if (!nodes.areSiblings()) {
 
-function singleNodeFromat(sel, nodename) {
-    var start, end;
-    if (sel.anchorOffset > sel.focusOffset) {
-        start = sel.anchorOffset;
-        end = sel.focusOffset;
-    } else {
-        end = sel.anchorOffset;
-        start = sel.focusOffset;
+        var grandPa = nodes.getCommonAncestor();
+
+        // Wrap elements util they become siblings
+
+        while(nodes.start.parentElement != grandPa) {
+            // We can skip wrapping and just jump outside if
+            // start is first
+            if (!nodes.start.previousSibling) {
+                nodes.start = nodes.start.parentElement;
+            } else {
+                var wrapper = element.wrapUntilEnd(nodes.start, nodename);
+                nodes.start = wrapper.parentElement.nextSibling;
+            }
+        }
+
+        while(nodes.end.parentElement != grandPa) {
+            if (!nodes.end.nextSibling) {
+                nodes.end = nodes.end.parentElement;
+            } else {
+                var wrapper = element.wrapUntilStart(nodes.end, nodename);
+                nodes.end = wrapper.parentElement.previousSibling;
+            }
+        }
     }
 
-    var text = sel.anchorNode.textContent;
-    var el = document.createElement(nodename);
-    el.textContent = text.substring(start, end);
+    element.wrapUntilOther(nodes.start, nodes.end, nodename);
+}
 
-    var html = text.substring(0, start - 1) + el.outerHTML + text.substring(end + 1);
+function singleNodeFromat (sel, nodename) {
+    var nodes = sel.getPositionNodes();
+
+    var text, el, html;
+    text = sel.anchorNode.textContent;
+    el = document.createElement(nodename);
+    el.textContent = text.substring(nodes.startOffset, nodes.endOffset);
+
+    html = text.substring(0, nodes.startOffset - 1) + el.outerHTML + text.substring(nodes.endOffset + 1);
     sel.getAnchorElement().innerHTML = html;
 }
