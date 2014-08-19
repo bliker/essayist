@@ -1,30 +1,21 @@
-module.exports = function (essayist) {
-    var elementEvents = {
+module.exports = function (emit, el) {
 
-        blur: function () {
+    el.addEventListener('blur', function (e) {
+        emit('blur', e);
+    });
 
-            propagate('blur');
-        },
+    el.addEventListener('focus', function (e) {
+        emit('focus', e);
+    });
 
-        focus: function () {
+    el.addEventListener('input', function (e) {
+        emit('input', e);
+    });
 
-            propagate('focus');
-        }
+    el.addEventListener('keypress', function (e) {
+        e = e || window.event;
+        var charCode = e.which || e.keyCode;
 
-    }
-
-    // Bind all events to the element
-    for(event in elementEvents) {
-        essayist.on(event, elementEvents[event]);
-    }
-
-    /**
-     * Execute following event on main editor element too
-     */
-    function propagate (name, payload) {
-        payload = payload || [];
-        payload.unshift(name);
-
-        essayist.emit.call(essayist, payload);
-    }
+        emit('keypress', e, String.fromCharCode(charCode));
+    });
 }

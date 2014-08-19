@@ -11,6 +11,17 @@ describe('Undo manager', function () {
         expect(manager.storage).toEqual([1, 2]);
     });
 
+    describe('should check if it can', function () {
+        it('undo if empty', function () {
+            expect(manager.canUndo()).toBeFalsy();
+        });
+
+        it('undo if non empty', function () {
+            manager.position = 0;
+            expect(manager.canUndo()).toBeTruthy();
+        });
+    })
+
     describe('should return move across history correctly', function () {
         beforeEach(function () {
             manager.storage = [1, 2, 3];

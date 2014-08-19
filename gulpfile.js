@@ -12,6 +12,10 @@ gulp.task('default', ['build-tests'], function (argument) {
     gulp.watch(['src/*.js', 'src/*/*.js', 'test/*.test.js', 'test/*/.test.js'], ['build-tests']);
 })
 
+gulp.task('demo', ['build'], function (argument) {
+    gulp.watch(['src/*.js', 'src/*/*.js'], ['build']);
+})
+
 gulp.task('build-tests', function () {
     var t = browserify(glob('./test/*.test.js'), {debug: true})
     t.bundle()
