@@ -6,7 +6,14 @@ var bindCommands = require('./commands');
 var Essayist = function (element) {
     var self = this;
     this.el = element;
-    this.cmd = bindCommands(this.emit.bind(this));
+
+    // properties will be callable from each command
+    this.cmd = bindCommands({
+        emit: this.emit.bind(this),
+        bell: this.bell.bind(this),
+        prompt: this.prompt.bind(this),
+    });
+
     this.undoManager = undoManager;
     bindEvents(this.emit.bind(this), this.el);
 
@@ -56,6 +63,10 @@ Essayist.prototype.setHTML = function (val) {
  */
 Essayist.prototype.bell = function () {
     console.warn('*Ding*');
+};
+
+Essayist.prototype.prompt = function (data, callback) {
+    callback({url: window.prompt()});
 };
 
 

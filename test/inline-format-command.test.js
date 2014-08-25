@@ -34,6 +34,12 @@ describe('Fromatting inline elements with selection', function () {
         expectContent().toBe('0<b>123</b>4');
     });
 
+    it('in same element', function () {
+        givenContent('1<b>|2|</b>3');
+        format(selection(), 'b');
+        expectContent().toBe('123');
+    });
+
     it('from el to parent', function () {
         givenContent('<p><i>1|2</i>3|4</p>');
         format(selection(), 'b');

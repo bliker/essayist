@@ -1,5 +1,6 @@
 var Command = function (name, execute) {
     this.name = name;
+    this.essayist = {};
     execute ? this.execute = execute : '';
 };
 

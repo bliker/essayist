@@ -13,9 +13,9 @@ exports.isTextNode = function (node) {
     return node.nodeType === node.TEXT_NODE;
 };
 
-exports.isBlock = function (element) {
-    if (typeof element != 'string') element = element.nodeName;
-    return exports.BLOCK_ELEMENTS.indexOf(element.toLowerCase()) > -1;
+exports.isBlock = function (el) {
+    if (typeof el != 'string') el = el.nodeName;
+    return exports.BLOCK_ELEMENTS.indexOf(el.toLowerCase()) > -1;
 };
 
 exports.isLastChild = function (node) {
@@ -44,12 +44,20 @@ exports.copyChildrenIntoFragment = function (el) {
 };
 
 exports.replaceChildrenWithTagName = function (node, name) {
-    Array.prototype.forEach.call(node.getElementsByTagName(name), function (e) {
-        var frag = exports.copyChildrenIntoFragment(e);
-        var parent = e.parentElement;
-        parent.replaceChild(frag, e);
-        parent.normalize();
+    Array.prototype.forEach.call(node.getElementsByTagName(name), function (el) {
+        exports.dissolve(el);
     });
+};
+
+/**
+ * Replace element with its children
+ * @param  {Element} el
+ */
+exports.dissolve = function  (el) {
+    var frag = exports.copyChildrenIntoFragment(el);
+    var parent = el.parentElement;
+    parent.replaceChild(frag, el);
+    parent.normalize();
 };
 
 /**

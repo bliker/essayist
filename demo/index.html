@@ -1,16 +1,45 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title></title>
+    <meta charset="UTF-8">
+    <title>Essayist Demo</title>
 </head>
+<style>
+
+    html {
+        background: #fafafa;
+    }
+
+    header h1, header h2 {
+        color: #444;
+        font-family: monospace;
+        font-weight: normal;
+    }
+
+    header h2 {
+        font-size: 1em;
+    }
+</style>
 <body>
-    <div contenteditable=true>
-        <p>Blah</p>
-    </div>
+
+    <header>
+        <h1>Demo of Essayist editor</h1>
+        <h2>Blah is blah</h2>
+    </header>
+
+    <main>
+        <div class="editor" contenteditable="true">
+            <p>Blah</p>
+        </div>
+    </main>
+
+    <footer>
+
+    </footer>
 
     <script src="../build/essayist.js"></script>
     <script type="text/javascript">
-        var es = new Essayist(document.querySelector('div'));
+        var es = new Essayist(document.querySelector('.editor'));
     </script>
 </body>
 </html>
