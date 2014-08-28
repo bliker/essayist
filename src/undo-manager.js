@@ -1,4 +1,4 @@
-module.exports = {
+var UndoManager = {
     storage: [],
     position: -1,
     firstUndo: true,
@@ -30,11 +30,11 @@ module.exports = {
     snap: function (data) {
         if (this.position !== this.storage.length - 1) {
             this.storage.splice(this.position + 1, 9999);
-        };
+        }
 
         if (this.truncate && data && data == this.storage[this.position]) {
             return false;
-        };
+        }
 
         this.storage[this.position + 1] = data;
         this.position = this.storage.length - 1;
@@ -45,6 +45,9 @@ module.exports = {
     reset: function () {
         this.firstUndo = true;
         this.position = -1;
-        this.storage = []
+        this.storage = [];
     },
-}
+};
+
+Object.seal(UndoManager);
+module.exports = UndoManager;

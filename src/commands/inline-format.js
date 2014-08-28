@@ -9,14 +9,12 @@ var element = require('../element');
  */
 module.exports = function (selection, nodename) {
     var nodes = new PositionNodes(selection);
-    if (nodes.collapsed)
-        return;
+    if (nodes.collapsed) return;
 
     nodes.splitTextOnSelection();
 
     var created = [];
     var grandPa = nodes.getCommonAncestor();
-
 
     nodes.start = tryMoveOut(nodes.start, 'left', grandPa);
     nodes.end = tryMoveOut(nodes.end, 'right', grandPa);
