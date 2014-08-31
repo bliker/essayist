@@ -20,35 +20,36 @@ module.exports = function (selection, nodename) {
     nodes.end = tryMoveOut(nodes.end, 'right', grandPa);
 
     if (!nodes.areSiblings()) {
-        created.concat(wrapStart(nodes, grandPa, nodename));
-        created.concat(wrapEnd(nodes, grandPa, nodename));
+        created.concat(wrapStartNode(nodes, grandPa, nodename));
+        created.concat(wrapEndNode(nodes, grandPa, nodename));
     }
 
     // When nodes are swapped it means that start and end were next siblings.
     if (nodes.areSwapped())
         return created;
 
+    // When nodes are same, means we are only going to do removing
     if (nodes.areSameNodes() && nodes.start.nodeName.toLowerCase() == nodename) {
         element.dissolve(nodes.start);
         return created;
     }
 
-    created.push(element.wrapUntilOther(nodes.start, nodes.end, nodename));
+    created.push(wrapUntilOther(nodes.start, nodes.end, nodename));
     return created;
 };
 
-function wrapStart (nodes, grandPa, nodename) {
+function wrapStartNode (nodes, grandPa, nodename) {
     var created = [];
 
     // Wrap until we reach a direct descendant of grandPa
     while(nodes.start.parentElement != grandPa) {
 
-        // Firsttry to move out so we can possibly save some time
+        // First try to move out so we can possibly save some time
         nodes.start = tryMoveOut(nodes.start, 'left', grandPa);
 
         // Check if moving out helped, if not wrap util the end
         if (nodes.start.parentElement != grandPa) {
-            var wrapper = element.wrapUntilEnd(nodes.start, nodename);
+            var wrapper = wrapUntilEnd(nodes.start, nodename);
             nodes.start = wrapper.parentElement.nextSibling;
             created.push(wrapper);
         }
@@ -57,7 +58,7 @@ function wrapStart (nodes, grandPa, nodename) {
     return created;
 }
 
-function wrapEnd (nodes, grandPa, nodename) {
+function wrapEndNode (nodes, grandPa, nodename) {
     var created = [];
 
     while(nodes.end.parentElement != grandPa) {
@@ -65,7 +66,7 @@ function wrapEnd (nodes, grandPa, nodename) {
         nodes.end = tryMoveOut(nodes.end, 'right', grandPa);
 
         if (nodes.end.parentElement != grandPa) {
-            var wrapper = element.wrapUntilStart(nodes.end, nodename);
+            var wrapper = wrapUntilStart(nodes.end, nodename);
             nodes.end = wrapper.parentElement.previousSibling;
             created.push(wrapper);
         }
@@ -92,4 +93,84 @@ function tryMoveOut (node, direction, grandPa) {
     }
 
     return node;
+}
+
+/**
+ * Wrap all siblings following (and including) startNode in element
+ * @param  {Node}    startNode
+ * @param  {String} newElementName
+ * @return {Array}  Created elements
+ */
+ function wrapUntilEnd (startNode, newElementName) {
+    var el = document.createElement(newElementName);
+    var startIndex = element.index(startNode);
+
+    var frag = element.splice(startNode.parentElement, startIndex, Number.MAX_SAFE_INTEGER, el);
+    el.appendChild(frag);
+
+    element.dissolveChildrenWithTagName(el, newElementName);
+    return el;
+}
+
+/**
+ * Wrap all siblings preceeding (and including) startNode in element
+ * @param  {Node}    startNode
+ * @param  {String} newElementName
+ * @return {Array}  Created elements
+ */
+function wrapUntilStart (startNode, newElementName) {
+    var el = document.createElement(newElementName);
+    var startIndex = element.index(startNode);
+
+    var frag = element.splice(startNode.parentElement, 0, startIndex+1, el);
+    el.appendChild(frag);
+
+    element.dissolveChildrenWithTagName(el, newElementName);
+    return el;
+}
+
+/**
+ * Wrap all siblings between (and including) startNode and endNode in element
+ * @param  {Node} startNode
+ * @param  {Node} endNode
+ * @param  {String} newElementName
+ * @return {Array}  Created elements
+ */
+function wrapUntilOther (startNode, endNode, newElementName) {
+    var el = document.createElement(newElementName);
+    var startIndex = element.index(startNode);
+    var endIndex = element.index(endNode);
+
+    if (startIndex == endIndex) {
+        el.appendChild(startNode.cloneNode(true));
+        startNode.parentElement.replaceChild(el, startNode);
+    } else {
+        var frag = element.splice(startNode.parentElement, startIndex, endIndex - startIndex + 1, el);
+        el.appendChild(frag);
+
+        element.dissolveChildrenWithTagName(el, newElementName);
+    }
+    return el;
+}
+
+/**
+ * Wrap all chlidren into inline element, could turn recrusive
+ * @param  {Element} el
+ * @param  {String} newElementName
+ * @return {Array}  Created elements
+ */
+function wrapChildren (parent, newElementName) {
+    var el = document.createElement(newElementName);
+    var created = [];
+    Array.prototype.forEach.call(parent.childNodes, function (n) {
+        if (element.isBlock(n))
+            created.join(wrapChildren(n, newElementName));
+
+        el.appendChild(n);
+    });
+
+    parent.appendChild(el);
+    created.push(el);
+
+    return created;
 }

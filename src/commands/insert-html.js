@@ -6,11 +6,10 @@ module.exports = function (selection, dom) {
     var nodes = new PositionNodes(selection);
     nodes.splitTextOnSelection();
 
-    if (selection.isCollapsed) {
+    if (selection.isCollapsed)
         forCollapsed(nodes, dom);
-    } else {
+    else
         forSelection(nodes, dom);
-    }
 };
 
 
@@ -39,15 +38,17 @@ function forCollapsed (nodes, dom) {
  */
 function forSelection(nodes, dom) {
     if (!nodes.areSiblings()) {
-        var grandPa = nodes.getCommonAncestor();
+        var next,
+            grandPa = nodes.getCommonAncestor();
+
         while(nodes.start.parentElement != grandPa) {
-            var next = nodes.start.parentElement.nextSibling;
+            next = nodes.start.parentElement.nextSibling;
             element.removeSiblingsFollowing(nodes.start);
             nodes.start = next;
         }
 
         while(nodes.end.parentElement != grandPa) {
-            var next = nodes.end.parentElement.previousSibling;
+            next = nodes.end.parentElement.previousSibling;
             element.removeSiblingsBefore(nodes.end);
             nodes.end = next;
         }

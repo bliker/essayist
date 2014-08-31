@@ -22,7 +22,7 @@ describe('Fromatting inline elements with selection', function () {
         expectContent().toBe('<p>0<b>1<i>2</i>3</b>4</p>');
     });
 
-    xit('across block element', function () {
+    it('across block element', function () {
         givenContent('0|1<p>2</p>3|4');
         format(selection(), 'b');
         expectContent().toBe('0<b>1</b><p><b>2</b></p><b>3</b>4');

@@ -5,7 +5,6 @@ module.exports = function (props) {
     var commands = {actual: {}};
 
     /**
-     * Bind new command
      * @param {Command|Array} cmd
      */
     commands.add = function (cmd) {
@@ -50,6 +49,10 @@ module.exports = function (props) {
         if (!cmd) throw new Error('Command with name: ' + name + ' does not exist.');
 
         console.log('remove');
+    };
+
+    commands.list = function () {
+        return Object.keys(commands.actual);
     };
 
     // Add default commands
